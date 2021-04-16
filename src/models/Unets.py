@@ -86,14 +86,17 @@ def create_unet(config, metrics=None, networkname='unet', single_model=True, sup
         use_upsample = config.get('USE_UPSAMPLE', 'False')
         pad = config.get('PAD', 'same')
         kernel_init = config.get('KERNEL_INIT', 'he_normal')
-        mask_classes = config.get("MASK_CLASSES", 4)
+        mask_classes = config.get("MASK_CLASSES", 3)
+        ndims = len(config.get('DIM', [10, 224, 224]))
         m_pool = config.get('M_POOL', (1, 2, 2))
+        m_pool = m_pool[-ndims:]
         f_size = config.get('F_SIZE', (3, 3, 3))
+        f_size = f_size[-ndims:]
         filters = config.get('FILTERS', 16)
         drop_1 = config.get('DROPOUT_MIN', 0.3)
         drop_3 = config.get('DROPOUT_MAX', 0.5)
         bn_first = config.get('BN_FIRST', False)
-        ndims = len(config.get('DIM', [10, 224, 224]))
+
         depth = config.get('DEPTH', 4)
         Conv = getattr(kl, 'Conv{}D'.format(ndims))
         one_by_one = (1, 1, 1)[:ndims]

@@ -177,7 +177,11 @@ def show_slice(img=[], mask=[], show=True, f_size=(15, 5)):
     elif len(mask.shape) == 3 and mask.shape[2] == 3:  # handle mask with three channels
         y_ = mask
 
-    elif len(mask.shape) == 3 and mask.shape[2] in [4]:  # handle mask with 4 channels (backround = first channel)
+    elif len(mask.shape) == 3 and mask.shape[2] < 3:  # handle mask with less than three channels
+        y_ = np.zeros((mask.shape[0], mask.shape[1], 3), dtype=np.float32)
+        y_[...,:mask.shape[2]] = mask[...,:mask.shape[2]] # slice as many channels as given
+
+    elif len(mask.shape) == 3 and mask.shape[2] == 4:  # handle mask with 4 channels (backround = first channel)
         y_ = mask[..., 1:]  # ignore backround channel for plotting
 
     else:
@@ -189,11 +193,11 @@ def show_slice(img=[], mask=[], show=True, f_size=(15, 5)):
     # scale image between 0 and 1
     x_ = (x_ - x_.min()) / (x_.max() - x_.min() + sys.float_info.epsilon)
 
-    # draw mask and image as rgb image, 
+    # draw mask and image as rgb image,
     # use the green channel for mask and image
     temp = np.zeros((x_.shape[0], x_.shape[1], 3), dtype=np.float32)
-    temp[..., 1] = np.maximum(x_, y_[..., 1] > 0.5)  # green
     temp[..., 0] = np.maximum(x_, y_[..., 0] > 0.5)  # red
+    temp[..., 1] = np.maximum(x_, y_[..., 1] > 0.5)  # green
     temp[..., 2] = np.maximum(x_, y_[..., 2] > 0.5)  # blue
 
     if show:
@@ -208,8 +212,8 @@ def show_slice(img=[], mask=[], show=True, f_size=(15, 5)):
         # draw all mask channels as rgb image
         fig.add_subplot(rows, columns, 2)
         temp2 = np.zeros((x_.shape[0], x_.shape[1], 3))
-        temp2[..., 1] = y_[..., 1]
         temp2[..., 0] = y_[..., 0]
+        temp2[..., 1] = y_[..., 1]
         temp2[..., 2] = y_[..., 2]
         plt.imshow(temp2)
 
@@ -218,7 +222,6 @@ def show_slice(img=[], mask=[], show=True, f_size=(15, 5)):
         plt.imshow(x_)
 
         fig.tight_layout(pad=0)
-        #plt.show()
         logging.info('Image-shape: {}'.format(x_.shape))
         logging.info('Image data points: {}'.format((x_ > 0).sum()))
         logging.info('Image mean: {:.3f}'.format(x_.mean()))
@@ -295,6 +298,11 @@ def show_slice_transparent(img=None, mask=None, show=True, f_size=(5, 5), ax=Non
         
     elif len(mask.shape) == 3 and mask.shape[2] == 3:  # handle mask with three channels
         y_ = (mask).astype(np.float32)
+
+    elif len(mask.shape) == 3 and mask.shape[2] < 3:  # handle mask with less than three channels
+        y_ = np.zeros((mask.shape[0], mask.shape[1], 3), dtype=np.float32)
+        y_[...,:mask.shape[2]] = mask[...,:mask.shape[2]] # slice as many channels as given
+
     elif len(mask.shape) == 3 and mask.shape[2] == 4:  # handle mask with 4 channels (backround = first channel)
         # ignore backround channel for plotting
         y_ = (mask[..., 1:] > 0.5).astype(np.float32)

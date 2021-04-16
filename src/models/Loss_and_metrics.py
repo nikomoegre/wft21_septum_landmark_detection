@@ -198,7 +198,7 @@ def dice_numpy(y_true, y_pred, empty_score=1.0):
 def bce_dice_loss(y_true, y_pred, w_bce=0.5, w_dice=1.):
     """
     weighted binary cross entropy - dice coef loss
-    uses all labels if shale labels ==3
+    uses all labels if shape labels == 3
     otherwise slice the background to ignore over-represented background class
     :param y_true:
     :param y_pred:
