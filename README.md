@@ -56,16 +56,25 @@ Setup native with OSX or Ubuntu
 (e.g.:  <a target="_blank" href="https://www.tensorflow.org/install/gpu">Tensorflow</a>)
 
 ### Local setup
-- Clone repository
+Clone repository
 ```
-git clone %reponame%
-cd %reponame%
+git clone %repo-name%
+cd %repo-name%
 ```
-- Create a virtual environment either via virtualenv or conda
+Create a conda environment from environment.yaml (environment name will be foo)
 ```
-make environment
+conda env create --file environment.yaml
 ```
-- Install dependencies via requirements.txt
+
+Activate environment
 ```
-make requirement
+conda activate foo
+```
+Install a helper to automatically change the working directory to the project root directory
+```
+pip install --extra-index-url https://test.pypi.org/simple/ ProjectRoot
+```
+Create a jupyter kernel from the activated environment, this kernel will be visible in the jupyter lab
+```
+python -m ipykernel install --user --name ax2sax --display-name "ax2sax kernel"
 ```
