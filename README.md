@@ -76,5 +76,5 @@ pip install --extra-index-url https://test.pypi.org/simple/ ProjectRoot
 ```
 Create a jupyter kernel from the activated environment, this kernel will be visible in the jupyter lab
 ```
-python -m ipykernel install --user --name ax2sax --display-name "ax2sax kernel"
+python -m ipykernel install --user --name foo --display-name "foo kernel"
 ```
